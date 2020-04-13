@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
-app.use( require('./routes/usuario') ); 
+app.use( require('./routes/index') ); 
 // connect to database
 mongoose.set('useCreateIndex', true);
 mongoose.set('useFindAndModify', false);
