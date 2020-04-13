@@ -6,8 +6,59 @@ const app = express();
 
 
 app.get('/usuario', (req, res) => {
-    res.json('get usuario')
+
+    let from = req.query.from || 0;
+    from = Number(from);
+
+    let limit = req.query.items || 5;
+    limit = Number(limit);
+
+    Usuario.find({estado: true}, 'nombre email role estado google img')
+        .skip(from)
+        .limit(limit)
+        .exec( (error, usuarios) => {
+            if (error) {
+                return res.status(400).json({
+                    ok: false,
+                    err
+                });
+            }
+
+            Usuario.count({estado: true}, (error, count) => {
+                if (error) {
+                    return res.status(400).json({
+                        ok: false,
+                        error
+                    });
+                }
+
+                res.json({
+                    ok: true,
+                    totalUsuarios: count,
+                    usuarios
+                });
+            });
+
+            
+        });
   });
+
+  app.get('/usuario/:id', (req, res) => {
+    let id = req.params.id;
+    Usuario.findById(id, (error, usuario) => {
+        if(error) {
+            return res.json({
+                ok: false,
+                error
+            });
+        }
+
+        res.json({
+            ok: true,
+            usuario
+        })
+    });
+  })
   
   app.post('/usuario', (req, res) => {
       let body = req.body;
@@ -38,7 +89,6 @@ app.get('/usuario', (req, res) => {
       let id = req.params.id;
       let body = _.pick(req.body, ['nombre',
         'email',
-        'password',
         'img',
         'role',
         'estado']); 
@@ -58,8 +108,58 @@ app.get('/usuario', (req, res) => {
       
   });
   
-  app.delete('/usuario', (req, res) => {
-      res.json('delete usuario');
+  app.delete('/usuario/:id', (req, res) => {
+      
+    let id = req.params.id;
+
+    Usuario.findByIdAndUpdate(id,{ estado: false }, {new: true},(error, usuarioDeleted) => {
+        if(error){
+            return res.json({
+                ok: false,
+                error
+            });
+        }
+
+        if(!usuarioDeleted){
+            return res.json({
+                ok: false,
+                error: {
+                    message: 'No se encontró el usuario'
+                }
+            })
+        }
+
+        res.json({
+            ok: true,
+            usuarioDeleted
+        });
+    });
+
+    /*
+    delete completelly
+    Usuario.findByIdAndRemove(id, (error, usuarioDeleted) => {
+        if (error) {
+            return res.status(400).json({
+                ok: false,
+                error
+            });
+        }
+
+        if(!usuarioDeleted) {
+            return res.status(400).json({
+                ok: false,
+                error: {
+                    message: 'No se encontró este usuario'
+                }
+            })
+        }
+
+        res.json({
+            ok:true,
+            usuario: usuarioDeleted
+        })
+    });*/
+
   });
 
   module.exports = app;
