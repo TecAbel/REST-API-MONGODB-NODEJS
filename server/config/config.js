@@ -19,9 +19,11 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'dev'
 process.env.EXP_TOKEN = 60 * 60 * 24 * 30;
 
 
-// =====================
+// ====================================
 // seed authentication
-// =====================
+// heroku config:set SEED=something
+// heroku config:unset SEED for remove
+// ====================================
 
 process.env.SEED = process.env.SEED || 'for-develop-secret';
 

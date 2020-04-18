@@ -2,10 +2,13 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const _ = require('underscore');
 const Usuario = require('./../models/usuario');
+const { verifyToken, verifyAdminRole } = require('./../middlewares/auth')
 const app = express();
 
 
-app.get('/usuario', (req, res) => {
+app.get('/usuario', verifyToken , (req, res) => {
+
+
 
     let from = req.query.from || 0;
     from = Number(from);
@@ -43,7 +46,7 @@ app.get('/usuario', (req, res) => {
         });
   });
 
-  app.get('/usuario/:id', (req, res) => {
+  app.get('/usuario/:id', verifyToken, (req, res) => {
     let id = req.params.id;
     Usuario.findById(id, (error, usuario) => {
         if(error) {
@@ -60,7 +63,7 @@ app.get('/usuario', (req, res) => {
     });
   })
   
-  app.post('/usuario', (req, res) => {
+  app.post('/usuario', [verifyToken, verifyAdminRole], (req, res) => {
       let body = req.body;
 
       let usuario = new Usuario({
@@ -85,7 +88,7 @@ app.get('/usuario', (req, res) => {
       });
   });
   
-  app.put('/usuario/:id', (req, res) => {
+  app.put('/usuario/:id', verifyToken, (req, res) => {
       let id = req.params.id;
       let body = _.pick(req.body, ['nombre',
         'email',
@@ -108,7 +111,7 @@ app.get('/usuario', (req, res) => {
       
   });
   
-  app.delete('/usuario/:id', (req, res) => {
+  app.delete('/usuario/:id', verifyToken, (req, res) => {
       
     let id = req.params.id;
 
