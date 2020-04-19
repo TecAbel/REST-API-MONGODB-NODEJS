@@ -88,7 +88,7 @@ app.get('/usuario', verifyToken , (req, res) => {
       });
   });
   
-  app.put('/usuario/:id', verifyToken, (req, res) => {
+  app.put('/usuario/:id', [verifyToken, verifyAdminRole], (req, res) => {
       let id = req.params.id;
       let body = _.pick(req.body, ['nombre',
         'email',
@@ -111,7 +111,7 @@ app.get('/usuario', verifyToken , (req, res) => {
       
   });
   
-  app.delete('/usuario/:id', verifyToken, (req, res) => {
+  app.delete('/usuario/:id', [verifyToken, verifyAdminRole], (req, res) => {
       
     let id = req.params.id;
 
