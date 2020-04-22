@@ -2,7 +2,7 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const _ = require('underscore');
 const Usuario = require('./../models/usuario');
-const { verifyToken, verifyAdminRole } = require('./../middlewares/auth')
+const { verifyToken, verifyAdminRole } = require('./../middlewares/auth');
 const app = express();
 
 
@@ -164,5 +164,6 @@ app.get('/usuario', verifyToken , (req, res) => {
     });*/
 
   });
+
 
   module.exports = app;
