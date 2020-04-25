@@ -16,8 +16,8 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'dev'
 // =================
 // 60 seconds, 60 minutes, 24hours, 30 days
 
-process.env.EXP_TOKEN = 60 * 60 * 24 * 30;
-
+// process.env.EXP_TOKEN = 60 * 60 * 24 * 30;
+process.env.EXP_TOKEN = '48h';
 
 // ====================================
 // seed authentication
